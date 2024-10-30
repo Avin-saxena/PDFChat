@@ -1,6 +1,6 @@
 ## Demo Video
 
-![Demo Video](https://github.com/Avin-saxena/AI-planet/blob/main/backend/assets/video.gif?raw=true)
+![Demo Video](https://github.com/Avin-saxena/PDFChat/blob/main/backend/assests/video.gif)
 
 *Preview of the application in action.*
 
