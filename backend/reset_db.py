@@ -4,17 +4,14 @@ import time
 from pathlib import Path
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def reset_database():
     db_path = Path('documents.db')
     
-    # Try to remove existing database
     if db_path.exists():
         try:
-            # Try to close any existing connections
             try:
                 conn = sqlite3.connect(str(db_path))
                 conn.close()
@@ -23,17 +20,15 @@ def reset_database():
             
             os.remove(db_path)
             logger.info("Removed existing database")
-            time.sleep(1)  # Wait a bit to ensure file is released
+            time.sleep(1)  
         except Exception as e:
             logger.error(f"Error removing database: {e}")
             return False
 
-    # Create new database with correct schema
     try:
         conn = sqlite3.connect(str(db_path))
         cursor = conn.cursor()
         
-        # Create the documents table with all required columns
         cursor.execute('''
         CREATE TABLE documents (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,7 +41,6 @@ def reset_database():
         
         conn.commit()
         
-        # Verify the schema
         cursor.execute("PRAGMA table_info(documents)")
         columns = cursor.fetchall()
         
@@ -64,7 +58,6 @@ def reset_database():
 
 if __name__ == "__main__":
     try:
-        # Ensure uploads directory exists
         os.makedirs("uploads", exist_ok=True)
         
         if reset_database():

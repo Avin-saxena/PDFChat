@@ -6,12 +6,12 @@ import os
 def test_database():
     print("Testing database connectivity...")
     
-    # Test SQLite direct connection
+
     try:
         conn = sqlite3.connect('documents.db')
         cursor = conn.cursor()
         
-        # Check table structure
+   
         cursor.execute("PRAGMA table_info(documents)")
         columns = cursor.fetchall()
         
@@ -26,10 +26,10 @@ def test_database():
         print(f"SQLite connection test failed: {e}")
         return False
 
-    # Test SQLAlchemy connection
+    
     try:
         db = SessionLocal()
-        # Try to create a test document
+      
         test_doc = Document(
             filename="test.pdf",
             original_filename="test_original.pdf"
@@ -37,7 +37,7 @@ def test_database():
         db.add(test_doc)
         db.commit()
         
-        # Clean up test data
+      
         db.delete(test_doc)
         db.commit()
         

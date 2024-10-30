@@ -7,11 +7,9 @@ logger = logging.getLogger(__name__)
 def test_with_sample_pdf(pdf_path: str):
     """Test QA system with a sample PDF"""
     try:
-        # Extract text from PDF
         text = extract_text_from_pdf(pdf_path)
         print(f"\nExtracted {len(text)} characters from PDF")
         
-        # Test questions
         test_questions = [
             "What is the email address?",
             "What is the phone number?",
@@ -31,6 +29,5 @@ def test_with_sample_pdf(pdf_path: str):
         logger.error(f"Test failed: {str(e)}")
 
 if __name__ == "__main__":
-    # Replace with path to your test PDF
     test_pdf_path = "path/to/your/test.pdf"
     test_with_sample_pdf(test_pdf_path)

@@ -20,18 +20,15 @@ def kill_python_processes():
             continue
     
     if killed:
-        time.sleep(2)  # Wait for processes to terminate
+        time.sleep(2)  
 
 def setup_database():
     db_path = Path('documents.db')
     
-    # First, kill any Python processes that might be locking the file
     kill_python_processes()
     
-    # Try to remove the old database
     if db_path.exists():
         try:
-            # Try to close any existing connections
             try:
                 temp_conn = sqlite3.connect(str(db_path))
                 temp_conn.close()
@@ -42,7 +39,6 @@ def setup_database():
             print("Successfully removed old database")
         except Exception as e:
             print(f"Warning: Could not remove old database: {e}")
-            # Try to rename it instead
             backup_path = f"documents_backup_{int(time.time())}.db"
             try:
                 os.rename(db_path, backup_path)
@@ -51,12 +47,11 @@ def setup_database():
                 print(f"Error: Could not rename database: {e}")
                 return False
 
-    # Create new database with correct schema
     try:
         conn = sqlite3.connect(str(db_path))
         cursor = conn.cursor()
         
-        # Create the documents table with all required columns
+      
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS documents (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,7 +67,7 @@ def setup_database():
         
         print("Successfully created new database with correct schema!")
         
-        # Verify the schema
+        
         conn = sqlite3.connect(str(db_path))
         cursor = conn.cursor()
         cursor.execute("PRAGMA table_info(documents)")
@@ -94,7 +89,6 @@ def setup_database():
         return False
 
 if __name__ == "__main__":
-    # Install psutil if not already installed
     try:
         import psutil
     except ImportError:

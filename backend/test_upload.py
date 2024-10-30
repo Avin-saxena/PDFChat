@@ -2,16 +2,16 @@ import requests
 import os
 
 def test_upload():
-    # Create a test PDF file
+ 
     with open("test.pdf", "w") as f:
         f.write("Test PDF content")
 
     try:
-        # Test health endpoint
+      
         health_response = requests.get("http://localhost:8000/health")
         print("Health check response:", health_response.json())
 
-        # Test file upload
+       
         files = {
             'file': ('test.pdf', open('test.pdf', 'rb'), 'application/pdf')
         }
@@ -27,7 +27,6 @@ def test_upload():
     except Exception as e:
         print(f"Error during test: {e}")
     finally:
-        # Clean up test file
         if os.path.exists("test.pdf"):
             os.remove("test.pdf")
 

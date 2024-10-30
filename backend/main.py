@@ -1,5 +1,3 @@
-# main.py
-
 import os
 import logging
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
@@ -12,7 +10,6 @@ from datetime import datetime
 from typing import List, Dict, Any
 import aiofiles
 
-# Import utilities and the models
 from utils import (
     extract_text_from_pdf,
     generate_fluent_answer,
@@ -25,11 +22,9 @@ from utils import (
     device
 )
 
-# Configure logging
 logger = logging.getLogger("app_logger")
 logger.setLevel(logging.INFO)
 
-# Create handlers if they don't exist
 if not logger.hasHandlers():
     console_handler = logging.StreamHandler()
     file_handler = logging.FileHandler("app.log")
@@ -41,7 +36,7 @@ if not logger.hasHandlers():
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
 
-# Database setup
+# database setup
 DATABASE_URL = "sqlite:///./qa_api.db"
 
 engine = create_engine(
@@ -51,7 +46,6 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
-# Define the Document model
 class Document(Base):
     __tablename__ = "documents"
 
@@ -60,9 +54,7 @@ class Document(Base):
     original_filename = Column(String, unique=False, index=True)
     content = Column(Text, nullable=True)
     upload_date = Column(DateTime, default=datetime.utcnow)
-    # Store embeddings as binary or in a separate table; here we'll skip persistence for simplicity
 
-# Create the database tables
 Base.metadata.create_all(bind=engine)
 
 # FastAPI initialization
@@ -72,24 +64,20 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS configuration (adjust origins as needed)
+# CORS configuration 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to specific domains in production
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Directory to store uploaded files
 UPLOAD_DIRECTORY = os.path.join(os.getcwd(), "uploads")
 os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
 
-# In-memory store for embeddings (for simplicity)
-# In production, consider using a vector database like FAISS
 document_embeddings = {}
 
-# Dependency to get DB session
 def get_db():
     db = SessionLocal()
     try:
@@ -97,7 +85,6 @@ def get_db():
     finally:
         db.close()
 
-# Pydantic models for request and response
 from pydantic import BaseModel
 
 class QuestionRequest(BaseModel):
@@ -117,7 +104,7 @@ class DocumentResponse(BaseModel):
     filename: str
     upload_date: str
 
-# Endpoint to upload a PDF
+# Api endpoint to upload a Pdf
 @app.post("/upload_pdf/", response_model=DocumentResponse)
 async def upload_pdf(
     file: UploadFile = File(...),
@@ -127,22 +114,21 @@ async def upload_pdf(
     try:
         logger.info(f"Receiving file upload: {file.filename}")
 
-        # Validate file extension
         if not file.filename.lower().endswith('.pdf'):
             logger.warning(f"Uploaded file is not a PDF: {file.filename}")
             raise HTTPException(status_code=400, detail="Only PDF files are allowed")
 
-        # Generate a unique filename to prevent conflicts
+        # Generating a unique filename to prevent conflicts
         unique_filename = f"{datetime.utcnow().timestamp()}_{file.filename}"
         file_path = os.path.join(UPLOAD_DIRECTORY, unique_filename)
 
-        # Save the uploaded file
+        # Saving the uploaded file
         async with aiofiles.open(file_path, 'wb') as out_file:
             content = await file.read()  # async read
             await out_file.write(content)
         logger.info(f"File saved successfully at: {file_path}")
 
-        # Extract text from PDF
+        # Extracting text from Pdf
         try:
             text_content = extract_text_from_pdf(file_path)
         except ValueError as ve:
@@ -155,7 +141,7 @@ async def upload_pdf(
             os.remove(file_path)
             raise HTTPException(status_code=500, detail="Error extracting text from PDF")
 
-        # Create a new Document entry
+        # creating a new document entry
         document = Document(
             filename=unique_filename,
             original_filename=file.filename,
@@ -167,7 +153,7 @@ async def upload_pdf(
         db.refresh(document)
         logger.info(f"Document processed and saved with ID: {document.id}")
 
-        # Generate and store embeddings for the document
+        # generate and store embeddings for the document
         chunks = chunk_context(text_content)
         if chunks:
             embeddings = generate_embeddings(chunks)
@@ -191,7 +177,7 @@ async def upload_pdf(
         logger.error(f"Unexpected error during file upload: {str(e)}")
         raise HTTPException(status_code=500, detail="Unexpected error during file upload")
 
-# Endpoint to ask a question
+# Api endpoint to ask a question
 @app.post("/ask_question/", response_model=QuestionResponse)
 async def ask_question(
     request: QuestionRequest,
@@ -201,15 +187,13 @@ async def ask_question(
     logger.info(f"Processing question for document {request.document_id}: {request.question}")
 
     try:
-        # Retrieve the document from the database
+        # Retrieving the document from the database
         document = db.query(Document).filter(Document.id == request.document_id).first()
         if not document:
             logger.warning(f"Document not found with ID: {request.document_id}")
             raise HTTPException(status_code=404, detail="Document not found")
 
-        # Check if embeddings are already generated
         if request.document_id not in document_embeddings:
-            # Generate embeddings if not present
             logger.info(f"Generating embeddings for document ID: {request.document_id}")
             chunks = chunk_context(document.content)
             if not chunks:
@@ -222,7 +206,7 @@ async def ask_question(
             }
             logger.info(f"Embeddings generated and stored for document ID: {request.document_id}")
 
-        # Retrieve the relevant chunks based on the question
+        # retrieving the relevant chunks based on the question
         chunks = document_embeddings[request.document_id]["chunks"]
         embeddings = document_embeddings[request.document_id]["embeddings"]
         relevant_chunks = retrieve_relevant_chunks(request.question, chunks, embeddings, top_k=3)
@@ -238,9 +222,9 @@ async def ask_question(
                 "model_answers": []
             }
 
-        # Generate answer using the T5 model
+        # generating answer using the T5 model
         answer = generate_fluent_answer(request.question, relevant_chunks)
-        confidence = 1.0  # Placeholder as T5 does not provide confidence scores
+        confidence = 1.0  
 
         return {
             "answer": answer,
@@ -263,7 +247,7 @@ async def ask_question(
         logger.error(f"Error processing question: {str(e)}")
         raise HTTPException(status_code=500, detail="Error processing question")
 
-# Endpoint to list documents
+# Api endpoint to list documents
 @app.get("/documents/", response_model=List[DocumentResponse])
 async def get_documents(
     db: Session = Depends(get_db),
@@ -286,7 +270,7 @@ async def get_documents(
         logger.error(f"Error fetching documents: {str(e)}")
         raise HTTPException(status_code=500, detail="Error fetching documents")
 
-# Endpoint to delete a document
+# Api endpoint to delete a document
 @app.delete("/document/{document_id}")
 async def delete_document(document_id: int, db: Session = Depends(get_db)) -> Dict[str, str]:
     """Delete a document and its associated file."""
@@ -304,12 +288,12 @@ async def delete_document(document_id: int, db: Session = Depends(get_db)) -> Di
         else:
             logger.warning(f"File not found at: {file_path}")
 
-        # Delete the embeddings if present
+        # delete the embeddings if present
         if document_id in document_embeddings:
             del document_embeddings[document_id]
             logger.info(f"Deleted embeddings for document ID: {document_id}")
 
-        # Delete the database record
+        # delete the database record
         db.delete(document)
         db.commit()
         logger.info(f"Deleted document ID: {document_id} from database.")
@@ -322,19 +306,17 @@ async def delete_document(document_id: int, db: Session = Depends(get_db)) -> Di
         logger.error(f"Error deleting document: {str(e)}")
         raise HTTPException(status_code=500, detail="Error deleting document")
 
-# Health check endpoint
 @app.get("/health/")
 async def health_check() -> Dict[str, Any]:
     """Check API health status."""
     try:
-        # Check if the model is loaded and operational
+        # checking if the model is loaded and operational
         model_status = "healthy" if t5_model else "unhealthy"
 
-        # Check if upload directory exists
         uploads_exists = os.path.exists(UPLOAD_DIRECTORY) and os.path.isdir(UPLOAD_DIRECTORY)
         uploads_status = "healthy" if uploads_exists else "unhealthy"
 
-        # Check database connection by querying a simple statement
+        # checking database connection by querying a simple statement
         db = SessionLocal()
         try:
             db.execute("SELECT 1")

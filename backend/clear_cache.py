@@ -12,12 +12,10 @@ def clear_cache():
     try:
         logger.info("Starting cache cleanup...")
 
-        # 1. Clear CUDA cache if GPU is being used
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
             logger.info("Cleared CUDA cache")
 
-        # 2. Clear Hugging Face cache
         cache_paths = [
             os.path.expanduser("~/.cache/huggingface/"),
             os.path.expanduser("~/.cache/torch/"),
@@ -37,7 +35,6 @@ def clear_cache():
                 except Exception as e:
                     logger.warning(f"Could not clear {path}: {str(e)}")
 
-        # 3. Clear Python cache files
         for root, dirs, files in os.walk("."):
             for name in files:
                 if name.endswith(".pyc") or name.endswith(".pyo"):

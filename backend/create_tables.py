@@ -6,7 +6,6 @@ from models import Document
 from database import Base, engine
 
 def drop_all_tables():
-    # Connect directly with sqlite3 to force-close any connections
     db_path = "documents.db"
     try:
         if os.path.exists(db_path):
@@ -17,18 +16,14 @@ def drop_all_tables():
 
 def create_tables():
     try:
-        # Drop existing tables
         drop_all_tables()
         
-        # Create all tables
         Base.metadata.create_all(bind=engine)
         
-        # Verify tables were created
         inspector = inspect(engine)
         tables = inspector.get_table_names()
         
         if 'documents' in tables:
-            # Verify columns
             columns = [col['name'] for col in inspector.get_columns('documents')]
             expected_columns = ['id', 'filename', 'original_filename', 'content', 'upload_date']
             
