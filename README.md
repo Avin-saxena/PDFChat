@@ -1,29 +1,29 @@
-# T5-Based Question Answering API
+# 🤖 T5-Based Question Answering API
 
 A robust and scalable solution for extracting and answering questions based on the content of uploaded PDF documents. This API leverages the power of a fine-tuned T5 model and advanced semantic search techniques to provide accurate and contextually relevant answers to user queries.
 
-## Features
+## ✨ Features
 
-- **PDF Upload and Processing:** Easily upload PDF documents for text extraction and processing
-- **Semantic Search:** Utilizes sentence embeddings for retrieving relevant document sections
-- **Advanced Answer Generation:** Generates clear answers using a fine-tuned T5 model
-- **Document Management:** List, view, and delete uploaded documents
-- **Health Monitoring:** Built-in health check endpoint
-- **Comprehensive Logging:** Detailed logging for monitoring and debugging
+- 📄 **PDF Upload and Processing:** Easily upload PDF documents for text extraction and processing
+- 🔍 **Semantic Search:** Utilizes sentence embeddings for retrieving relevant document sections
+- 🎯 **Advanced Answer Generation:** Generates clear answers using a fine-tuned T5 model
+- 📚 **Document Management:** List, view, and delete uploaded documents
+- 💻 **Health Monitoring:** Built-in health check endpoint
+- 📊 **Comprehensive Logging:** Detailed logging for monitoring and debugging
 
-## Technologies Used
+## 🛠️ Technologies Used
 
-- Python 3.8+
-- FastAPI
-- Transformers (Hugging Face)
-- Sentence-Transformers
-- PyMuPDF (fitz)
-- SQLAlchemy
-- SQLite
-- Uvicorn
-- FAISS
+- 🐍 Python 3.8+
+- ⚡ FastAPI
+- 🤗 Transformers (Hugging Face)
+- 🔤 Sentence-Transformers
+- 📑 PyMuPDF (fitz)
+- 🗃️ SQLAlchemy
+- 🎲 SQLite
+- 🚀 Uvicorn
+- 📊 FAISS
 
-## Installation and Setup
+## 🚀 Installation and Setup
 
 ### 1. Clone the Repository
 
@@ -53,23 +53,23 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4. Prepare the T5 Model
+### 4. Prepare the T5 Model 🤖
 
 Place your fine-tuned T5 model in the `backend/t5_qa_model/` directory with all necessary files:
-- config.json
-- pytorch_model.bin
-- tokenizer_config.json
-- special_tokens_map.json
-- vocab.json
+- 📄 config.json
+- 🔧 pytorch_model.bin
+- 🎯 tokenizer_config.json
+- 🔤 special_tokens_map.json
+- 📚 vocab.json
 
-### 5. Create Necessary Directories
+### 5. Create Necessary Directories 📁
 
 ```bash
 mkdir uploads
 mkdir logs
 ```
 
-### 6. Start the Application
+### 6. Start the Application 🚀
 
 ```bash
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
@@ -77,9 +77,9 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 Access the API documentation at `http://localhost:8000/docs`
 
-## API Endpoints
+## 🔌 API Endpoints
 
-### 1. Upload a PDF
+### 1. Upload a PDF 📄
 
 ```http
 POST /upload_pdf/
@@ -97,7 +97,7 @@ POST /upload_pdf/
 }
 ```
 
-### 2. Ask a Question
+### 2. Ask a Question ❓
 
 ```http
 POST /ask_question/
@@ -129,67 +129,68 @@ POST /ask_question/
 }
 ```
 
-### 3. List Documents
+### 3. List Documents 📋
 
 ```http
 GET /documents/?skip=0&limit=10
 ```
 
-### 4. Delete Document
+### 4. Delete Document 🗑️
 
 ```http
 DELETE /document/{document_id}
 ```
 
-### 5. Health Check
+### 5. Health Check 💚
 
 ```http
 GET /health/
 ```
 
-## Directory Structure
+## 📁 Directory Structure
 
 ```
 t5-qa-api/
-├── README.md
-├── requirements.txt
-├── main.py
-├── utils.py
-├── .gitignore
-├── backend/
-│   └── t5_qa_model/
-├── uploads/
-├── logs/
-└── venv/
+├── 📄 README.md
+├── 📋 requirements.txt
+├── ⚙️ main.py
+├── 🔧 utils.py
+├── 📝 .gitignore
+├── 📁 backend/
+│   └── 🤖 t5_qa_model/
+├── 📂 uploads/
+├── 📊 logs/
+└── 🔮 venv/
 ```
 
-## Error Handling
+## ⚠️ Error Handling
 
 The API implements comprehensive error handling:
-- 400 Bad Request: Invalid inputs
-- 404 Not Found: Resource not found
-- 500 Internal Server Error: Server-side errors
+- 🚫 400 Bad Request: Invalid inputs
+- 🔍 404 Not Found: Resource not found
+- ⚡ 500 Internal Server Error: Server-side errors
 
-## Contributing
+## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/YourFeatureName`
-3. Commit changes: `git commit -m "Add Your Feature Description"`
-4. Push to branch: `git push origin feature/YourFeatureName`
-5. Submit a pull request
+1. 🔱 Fork the repository
+2. 🌿 Create a feature branch: `git checkout -b feature/YourFeatureName`
+3. 💾 Commit changes: `git commit -m "Add Your Feature Description"`
+4. ⬆️ Push to branch: `git push origin feature/YourFeatureName`
+5. 🎯 Submit a pull request
 
-## License
+## 📜 License
 
 This project is licensed under the MIT License.
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
-- Hugging Face for Transformers
-- FastAPI
-- Sentence-Transformers
-- PyMuPDF
-- FAISS
+- 🤗 Hugging Face for Transformers
+- ⚡ FastAPI
+- 🔤 Sentence-Transformers
+- 📑 PyMuPDF
+- 📊 FAISS
 
-## Contact
+## 📬 Contact
 
 For questions or issues, please open an issue on the GitHub repository.
+
