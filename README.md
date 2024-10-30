@@ -1,6 +1,6 @@
 ## Demo Video
 
-![Demo Video](backend/assets/video.gif)
+![Demo Video](backend/assets/video)
 
 *Preview of the application in action.*
 
