@@ -178,9 +178,6 @@ The API implements comprehensive error handling:
 4. ⬆️ Push to branch: `git push origin feature/YourFeatureName`
 5. 🎯 Submit a pull request
 
-## 📜 License
-
-This project is licensed under the MIT License.
 
 ## 🙏 Acknowledgements
 
@@ -190,7 +187,5 @@ This project is licensed under the MIT License.
 - 📑 PyMuPDF
 - 📊 FAISS
 
-## 📬 Contact
 
-For questions or issues, please open an issue on the GitHub repository.
 
