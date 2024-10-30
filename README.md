@@ -1,6 +1,6 @@
 ## Demo Video
 
-![Demo Video](https://github.com/Avin-saxena/PDFChat/blob/main/backend/assests/video.gif)
+![Demo Video](https://github.com/Avin-saxena/PDFChat/blob/main/backend/assests/video.gif?raw=true)
 
 *Preview of the application in action.*
 
