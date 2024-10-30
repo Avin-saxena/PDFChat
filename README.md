@@ -1,3 +1,9 @@
+## Demo Video
+
+![Demo Video](https://github.com/Avin-saxena/PDFChat/blob/main/backend/assests/video.gif?raw=true)
+
+*Preview of the application in action.*
+
 # 🤖 T5-Based Question Answering API
 
 A robust and scalable solution for extracting and answering questions based on the content of uploaded PDF documents. This API leverages the power of a fine-tuned T5 model and advanced semantic search techniques to provide accurate and contextually relevant answers to user queries.
