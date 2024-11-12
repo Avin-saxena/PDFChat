@@ -1,6 +1,6 @@
 ## Demo Video
 
-![Demo Video](https://github.com/Avin-saxena/Tunable_labs_assessment/blob/main/demo_video~aed7d0874a8a4cf955401365839ab3c09e3c76bd?raw=true)
+![Demo Video](https://github.com/Avin-saxena/Tunable_labs_assessment/blob/demo_video~aed7d0874a8a4cf955401365839ab3c09e3c76bd?raw=true)
 
 *Preview of the application in action.*
 
